@@ -1,0 +1,45 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ragforge"
+version = "0.1.0"
+description = "Hybrid retrieval and citation-grounded document QA"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+  "fastapi>=0.115,<1",
+  "uvicorn[standard]>=0.30,<1",
+  "pydantic-settings>=2.5,<3",
+  "numpy>=1.26,<3",
+  "rank-bm25>=0.2.2,<1",
+  "httpx>=0.27,<1",
+]
+
+[project.optional-dependencies]
+postgres = ["psycopg[binary,pool]>=3.2,<4", "pgvector>=0.3,<1"]
+ml = ["sentence-transformers>=3,<4", "torch>=2.2,<3"]
+spark = ["pyspark>=3.5,<4"]
+langchain = ["langchain>=0.3,<1", "langchain-openai>=0.2,<1"]
+eval = ["ragas>=0.2,<1", "datasets>=3,<4", "pandas>=2.2,<3"]
+dev = ["pytest>=8,<9", "pytest-asyncio>=0.24,<1", "ruff>=0.8,<1", "mypy>=1.13,<2"]
+all = ["ragforge[postgres,ml,spark,langchain,eval,dev]"]
+
+[project.scripts]
+ragforge = "ragforge.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ragforge"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
